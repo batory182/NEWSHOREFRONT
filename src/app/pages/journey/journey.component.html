@@ -1,0 +1,62 @@
+<div class="container journey-container">
+  <div>
+    <mat-card>
+      <form [formGroup]="form" novalidate (ngSubmit)="search()">
+        <h3 style="text-align: center">Consultar Rutas</h3>
+        <div>
+          <mat-form-field appearance="outline" class="form-element">
+            <mat-label>Origen</mat-label>
+            <input class="uppercase" matInput formControlName="origin" maxlength="3" />
+            <mat-error *ngIf="form.controls['origin'].hasError('required')">Obligatorio</mat-error>
+            <mat-error *ngIf="form.controls['origin'].hasError('minLength')">Minimo 3 caracteres</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-element">
+            <mat-label>destino</mat-label>
+            <input class="uppercase" matInput formControlName="destination" maxlength="3" />
+            <mat-error *ngIf="form.controls['destination'].hasError('required')">Obligatorio</mat-error>
+            <mat-error *ngIf="form.controls['destination'].hasError('minLength')">Minimo 3 caracteres</mat-error>
+            <mat-error *ngIf="form.controls['destination'].hasError('mustMatch')">El destino debe ser
+              diferente</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <button mat-raised-button color="primary" [disabled]="form.invalid">Buscar</button>          
+        </div>
+      </form>
+    </mat-card>
+    <div  *ngIf="result">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Origen: {{journey.Origin}}</mat-card-title>
+          <mat-card-title>Destino: {{journey.Destination}}</mat-card-title>
+          <mat-card-title>Precio Total: {{journey.Price}} {{currency}}</mat-card-title>
+          <mat-form-field>
+            <mat-label>Cambiar moneda an option</mat-label>
+            <mat-select (selectionChange)="changeCurrency($event.value)">
+              <mat-option *ngFor="let curreny of currencies" [value]="curreny">{{curreny.Code}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-card-header>
+        <mat-card-content>
+          <ul ui-scroll-viewport>
+            <li *ngFor="let item of journey.Flights">
+              <mat-card>
+                <mat-card-header>
+                  <mat-card-title>Origen: {{item.Origin}}</mat-card-title>
+                  <mat-card-title>Destino: {{item.Destination}}</mat-card-title>
+
+                </mat-card-header>
+                <mat-card-content>
+                  <mat-card-subtitle>Operado por {{item.Transport.FlightCarrier}}</mat-card-subtitle>
+                  <mat-card-subtitle>Numero de vuelo {{item.Transport.FlightNumber}}</mat-card-subtitle>
+                </mat-card-content>
+              </mat-card>
+            </li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
